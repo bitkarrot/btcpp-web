@@ -17,12 +17,14 @@ type (
 		MailOff           bool
 		StripeKey         string
 		StripeEndpointSec string
+		UseCLN            bool
 		RegistryPin       string
 		LogFile           string
 		Notion            NotionConfig
 		SendGrid          SendGridConfig
 		Google            GoogleConfig
 		OpenNode          OpenNodeConfig
+		CLN               CLNConfig
 		Host              string
 		LocalExternal     string
 		HMACSecret        string

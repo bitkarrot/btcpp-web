@@ -15,6 +15,7 @@ import (
 	"github.com/base58btc/btcpp-web/internal/config"
 	"github.com/base58btc/btcpp-web/internal/handlers"
 	"github.com/base58btc/btcpp-web/internal/types"
+	checkout "github.com/base58btc/cln-checkout"
 )
 
 const configFile = "config.toml"
@@ -51,6 +52,8 @@ func loadConfig() *types.EnvConfig {
 		config.OpenNode.Key = os.Getenv("OPENNODE_KEY")
 		config.OpenNode.Endpoint = os.Getenv("OPENNODE_ENDPOINT")
 
+		config.UseCLN = os.Getenv("CLN_ON") == "1"
+
 		config.StripeKey = os.Getenv("STRIPE_KEY")
 		config.StripeEndpointSec = os.Getenv("STRIPE_END_SECRET")
 		config.RegistryPin = os.Getenv("REGISTRY_PIN")
@@ -67,6 +70,17 @@ func loadConfig() *types.EnvConfig {
 
 		secretHex := os.Getenv("HMAC_SECRET")
 		config.HMACKey = sha256.Sum256([]byte(secretHex))
+
+		expirySec, err := strconv.ParseUint(os.Getenv("CLN_INVOICE_EXPIRY"), 10, 64)
+		if err != nil {
+			log.Fatal(err)
+			return nil
+		}
+		config.CLN = types.CLNConfig{
+			Expiry:   expirySec,
+			Hostname: os.Getenv("CLN_HOSTNAME"),
+			Pubkey:   os.Getenv("CLN_NODE_PUBKEY"),
+		}
 	}
 
 	return &config
@@ -103,6 +117,13 @@ func main() {
 		app.Err.Fatal(err)
 	}
 
+	/* If we're using the CLN backend, init
+	 * the checkout runner */
+	err = setupCLNCheckout(&app)
+	if err != nil {
+		app.Err.Fatal(err)
+	}
+
 	srv := &http.Server{
 		Addr:    fmt.Sprintf(":%s", app.Env.Port),
 		Handler: app.Session.LoadAndSave(routes),
@@ -120,6 +141,40 @@ func main() {
 	if err != nil {
 		app.Err.Fatal(err)
 	}
+}
+
+func setupCLNCheckout(app *config.AppContext) error {
+	label := "btcpp"
+	err := checkout.Init(app.Env.CLN.Hostname, app.Env.CLN.Pubkey, label)
+	if err != nil {
+		return err
+	}
+
+	msgbus := make(chan *checkout.InvoiceEvent)
+	err = checkout.RegisterForInvoiceUpdates(msgbus)
+	if err != nil {
+		return err
+	}
+
+	/* FIXME: pull out last updated index? */
+	lastIndex := uint64(0)
+
+	/* Run a loop for handling invoice event notifications! */
+	go func(msgchan chan *checkout.InvoiceEvent) {
+		for {
+			inv := <-msgbus
+			handled := getters.HandleCLNInvoiceEvent(app, inv)
+			if !handled {
+				/* FIXME: loop until it is handled? */
+				app.Err.Printf("Unable to handle invoice event %v", inv)
+			}
+
+			/* FIXME: write to disk? */
+			lastIndex = inv.UpdateIndex + 1
+		}
+	}(msgbus)
+
+	return checkout.StartInvoiceWatch(lastIndex)
 }
 
 func run(env *types.EnvConfig) error {

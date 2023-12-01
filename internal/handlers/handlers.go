@@ -27,6 +27,8 @@ import (
 	stripe "github.com/stripe/stripe-go/v76"
 	"github.com/stripe/stripe-go/v76/checkout/session"
 	"github.com/stripe/stripe-go/v76/webhook"
+
+	checkout "github.com/base58btc/cln-checkout"
 )
 
 func MiniCss() string {
@@ -1284,7 +1286,11 @@ func HandleEmail(w http.ResponseWriter, r *http.Request, ctx *config.AppContext)
 
 		/* The goal is that we hit opennode init, with an email! */
 		isLocal := tixPrice == tix.Local
-		OpenNodeInit(w, r, ctx, conf, tix, form.DiscountPrice, &form, isLocal)
+		if ctx.Env.UseCLN {
+			CLNInvoiceRun(w, r, ctx, conf, tix, tixPrice, &form)
+		} else {
+			OpenNodeInit(w, r, ctx, conf, tix, form.DiscountPrice, &form, isLocal)
+		}
 		return
 	default:
 		http.NotFound(w, r)
@@ -1304,6 +1310,38 @@ func OpenNodeInit(w http.ResponseWriter, r *http.Request, ctx *config.AppContext
 	/* FIXME: v2: implement on-site btc checkout */
 	/* for now we go ahead and just redirect to opennode, see you latrrr */
 	http.Redirect(w, r, payment.HostedCheckoutURL, http.StatusSeeOther)
+}
+
+func CLNInvoiceRun(w http.ResponseWriter, r *http.Request, ctx *config.AppContext, conf *types.Conf, tix *types.ConfTicket, tixPrice uint, tixForm *types.TixForm) {
+
+	if !ctx.Env.Prod {
+		tixPrice = uint(1)
+	}
+
+	desc := getters.MakeCLNDesc(conf, tixForm.Email, tixPrice, tixPrice == tix.Local)
+
+	/* Convert tixPrice to sats */
+	priceAsCents := uint64(tixPrice * 100)
+	sats, err := getters.ConvertToSats(priceAsCents)
+	if err != nil {
+		http.Error(w, "unable to convert to btc", http.StatusInternalServerError)
+		ctx.Err.Printf("coindesk price fetch failed", err.Error())
+		return
+	}
+
+	msats := uint64(sats * 1000)
+	invoice, err := checkout.NewRestrictedInvoice(msats, ctx.Env.CLN.Expiry, desc)
+
+	if err != nil {
+		http.Error(w, "unable to init btc payment", http.StatusInternalServerError)
+		ctx.Err.Printf("CLN invoice fetch failed", err.Error())
+		return
+	}
+
+	/* FIXME: QR codes for invoice+onchain */
+	/* FIxME: show checkout page! */
+	ctx.Infos.Printf("we did it! %v", invoice)
+	w.WriteHeader(http.StatusOK)
 }
 
 func StripeInit(w http.ResponseWriter, r *http.Request, ctx *config.AppContext, conf *types.Conf, tix *types.ConfTicket, tixPrice uint) {
