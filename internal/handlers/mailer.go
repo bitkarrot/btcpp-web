@@ -58,7 +58,7 @@ func CheckForNewMails(ctx *config.AppContext) {
 			fails++
 		}
 	}
-	if (success+fails+resent > 0) {
+	if success+fails+resent > 0 {
 		ctx.Infos.Printf("Of %d, sent %d mails, %d failed, %d retries", success+fails+resent, success, fails, resent)
 	}
 }
