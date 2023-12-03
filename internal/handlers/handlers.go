@@ -30,6 +30,7 @@ import (
 	"github.com/stripe/stripe-go/v76/webhook"
 
 	checkout "github.com/base58btc/cln-checkout"
+	"github.com/base58btc/clnsocket"
 )
 
 func MiniCss() string {
@@ -344,6 +345,10 @@ func Routes(app *config.AppContext) (http.Handler, error) {
 		maybeReload(app)
 		HandleDiscount(w, r, app)
 	}).Methods("POST")
+	r.HandleFunc("/tix/{label}/check-status", func(w http.ResponseWriter, r *http.Request) {
+		maybeReload(app)
+		HandleTixCheckStatus(w, r, app)
+	}).Methods("GET", "POST")
 	r.HandleFunc("/tix/{tix}", func(w http.ResponseWriter, r *http.Request) {
 		HandleTixSelection(w, r, app)
 	}).Methods("GET")
@@ -472,6 +477,7 @@ type TixPayPage struct {
 	Desc      string
 	BoltQR    string
 	Invstring string
+	InvLabel  string
 	Discount  string
 	BIP21QR   string
 	BtcAddr   string
@@ -1128,6 +1134,32 @@ func OpenNodeCallback(w http.ResponseWriter, r *http.Request, ctx *config.AppCon
 	w.WriteHeader(http.StatusOK)
 }
 
+func HandleTixCheckStatus(w http.ResponseWriter, r *http.Request, ctx *config.AppContext) {
+	/* FIXME: make this an envar? */
+	token := "6qthVaDryzXm-NpJXdJ4mReZ06auzaMWSQ0pY6HnX8Q9MA=="
+
+	params := mux.Vars(r)
+	invLabel := params["label"]
+
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Cache-Control", "no-cache")
+	w.Header().Set("Connection", "keep-alive")
+	w.Header().Set("Content-Type", "text/event-stream")
+
+	rc := http.NewResponseController(w)
+
+	ctx.Infos.Println("going for the check!")
+	status, err := clnsocket.WaitInvoice(token, invLabel)
+	if err != nil {
+		ctx.Err.Printf("error waiting for invoice %s: %s", invLabel, err)
+		w.WriteHeader(http.StatusServiceUnavailable)
+		return
+	}
+
+	fmt.Fprintf(w, "data: %t\n\n", status == "paid")
+	rc.Flush()
+}
+
 func HandleTixSelection(w http.ResponseWriter, r *http.Request, ctx *config.AppContext) {
 	params := mux.Vars(r)
 	tixSlug := params["tix"]
@@ -1398,6 +1430,7 @@ func CLNInvoiceRun(w http.ResponseWriter, r *http.Request, ctx *config.AppContex
 		BtcPrice:  fmt.Sprintf("%.8f", btcAmount),
 		Desc:      shortDesc,
 		BoltQR:    invQR,
+		InvLabel:  invoice.Label,
 		Invstring: invoice.Invstring,
 		BIP21QR:   bip21QR,
 		BtcAddr:   addr,
