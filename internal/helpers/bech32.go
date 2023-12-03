@@ -107,9 +107,6 @@ func Encode(hrp string, data []int) (string, error) {
 
 // Decode decodes bechString(Bech32) returns hrp(human-readable part) and data(32bit data array) / or error
 func Decode(bechString string) (string, []int, error) {
-	if len(bechString) > 90 {
-		return "", nil, fmt.Errorf("too long : len=%d", len(bechString))
-	}
 	if strings.ToLower(bechString) != bechString && strings.ToUpper(bechString) != bechString {
 		return "", nil, fmt.Errorf("mixed case")
 	}
