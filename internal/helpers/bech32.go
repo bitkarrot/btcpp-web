@@ -18,12 +18,20 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-package bech32
+package helpers
 
 import (
 	"bytes"
 	"fmt"
 	"strings"
+)
+
+type Version uint
+
+const (
+	NONE    Version = 0
+	BECH32  Version = 1
+	BECH32M Version = 0x2bc830a3
 )
 
 var charset = "qpzry9x8gf2tvdw0s3jn54khce6mua7l"
@@ -56,13 +64,17 @@ func hrpExpand(hrp string) []int {
 	return ret
 }
 
-func verifyChecksum(hrp string, data []int) bool {
-	return polymod(append(hrpExpand(hrp), data...)) == 1
+func verifyChecksum(hrp string, data []int) (Version, bool) {
+	ck := Version(polymod(append(hrpExpand(hrp), data...)))
+	if ck != BECH32 && ck != BECH32M {
+		return NONE, false
+	}
+	return ck, true
 }
 
-func createChecksum(hrp string, data []int) []int {
+func createChecksum(version Version, hrp string, data []int) []int {
 	values := append(append(hrpExpand(hrp), data...), []int{0, 0, 0, 0, 0, 0}...)
-	mod := polymod(values) ^ 1
+	mod := polymod(values) ^ int(version)
 	ret := make([]int, 6)
 	for p := 0; p < len(ret); p++ {
 		ret[p] = (mod >> uint(5*(5-p))) & 31
@@ -72,7 +84,7 @@ func createChecksum(hrp string, data []int) []int {
 
 // Encode encodes hrp(human-readable part) and data(32bit data array), returns Bech32 / or error
 // if hrp is uppercase, return uppercase Bech32
-func Encode(hrp string, data []int) (string, error) {
+func Encode(version Version, hrp string, data []int) (string, error) {
 	if (len(hrp) + len(data) + 7) > 90 {
 		return "", fmt.Errorf("too long : hrp length=%d, data length=%d", len(hrp), len(data))
 	}
@@ -89,7 +101,7 @@ func Encode(hrp string, data []int) (string, error) {
 	}
 	lower := strings.ToLower(hrp) == hrp
 	hrp = strings.ToLower(hrp)
-	combined := append(data, createChecksum(hrp, data)...)
+	combined := append(data, createChecksum(version, hrp, data)...)
 	var ret bytes.Buffer
 	ret.WriteString(hrp)
 	ret.WriteString("1")
@@ -129,13 +141,14 @@ func Decode(bechString string) (string, []int, error) {
 		}
 		data = append(data, d)
 	}
-	if !verifyChecksum(hrp, data) {
+
+	if _, ok := verifyChecksum(hrp, data); !ok {
 		return "", nil, fmt.Errorf("invalid checksum")
 	}
 	return hrp, data[:len(data)-6], nil
 }
 
-func convertbits(data []int, frombits, tobits uint, pad bool) ([]int, error) {
+func ConvertBits(data []int, frombits, tobits uint, pad bool) ([]int, error) {
 	acc := 0
 	bits := uint(0)
 	ret := []int{}
@@ -178,7 +191,7 @@ func SegwitAddrDecode(hrp, addr string) (int, []int, error) {
 	if data[0] > 16 {
 		return -1, nil, fmt.Errorf("invalid witness version : %d", data[0])
 	}
-	res, err := convertbits(data[1:], 5, 8, false)
+	res, err := ConvertBits(data[1:], 5, 8, false)
 	if err != nil {
 		return -1, nil, err
 	}
@@ -202,11 +215,15 @@ func SegwitAddrEncode(hrp string, version int, program []int) (string, error) {
 	if version == 0 && len(program) != 20 && len(program) != 32 {
 		return "", fmt.Errorf("invalid program length for witness version 0 (per BIP141) : %d", len(program))
 	}
-	data, err := convertbits(program, 8, 5, true)
+	data, err := ConvertBits(program, 8, 5, true)
 	if err != nil {
 		return "", err
 	}
-	ret, err := Encode(hrp, append([]int{version}, data...))
+	bechVersion := BECH32M
+	if version == 0 {
+		bechVersion = BECH32
+	}
+	ret, err := Encode(bechVersion, hrp, append([]int{version}, data...))
 	if err != nil {
 		return "", err
 	}
