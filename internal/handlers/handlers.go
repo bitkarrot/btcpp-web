@@ -17,6 +17,7 @@ import (
 
 	"github.com/base58btc/btcpp-web/external/getters"
 	"github.com/base58btc/btcpp-web/internal/config"
+	"github.com/base58btc/btcpp-web/internal/helpers"
 	"github.com/base58btc/btcpp-web/internal/types"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/schema"
@@ -156,6 +157,11 @@ func loadTemplates(app *config.AppContext) error {
 	}
 	app.TemplateCache["email-includes.tmpl"] = emailincludes
 
+	payment, err := template.ParseFiles("templates/collect-payment.tmpl", "templates/main_nav.tmpl")
+	if err != nil {
+		return err
+	}
+	app.TemplateCache["collect-payment.tmpl"] = payment
 
 	return nil
 }
@@ -455,6 +461,20 @@ func calcTixHMAC(ctx *config.AppContext, conf *types.Conf, tixPrice uint, discou
 	mac.Write(priceBytes)
 	mac.Write([]byte(discountCode))
 	return hex.EncodeToString(mac.Sum(nil))
+}
+
+type TixPayPage struct {
+	Conf      *types.Conf
+	Tix       *types.ConfTicket
+	Price     uint
+	SatsPrice uint64
+	BtcPrice  string
+	Desc      string
+	BoltQR    string
+	Invstring string
+	Discount  string
+	BIP21QR   string
+	BtcAddr   string
 }
 
 func GetReloadConf(w http.ResponseWriter, r *http.Request, ctx *config.AppContext) {
@@ -1309,6 +1329,7 @@ func OpenNodeInit(w http.ResponseWriter, r *http.Request, ctx *config.AppContext
 
 	/* FIXME: v2: implement on-site btc checkout */
 	/* for now we go ahead and just redirect to opennode, see you latrrr */
+	ctx.Infos.Println(payment)
 	http.Redirect(w, r, payment.HostedCheckoutURL, http.StatusSeeOther)
 }
 
@@ -1338,10 +1359,54 @@ func CLNInvoiceRun(w http.ResponseWriter, r *http.Request, ctx *config.AppContex
 		return
 	}
 
-	/* FIXME: QR codes for invoice+onchain */
-	/* FIxME: show checkout page! */
-	ctx.Infos.Printf("we did it! %v", invoice)
-	w.WriteHeader(http.StatusOK)
+	/* Get QR codes for invoice+onchain */
+	onchainAddrs, err := helpers.GetFallbackAddrs(invoice.Invstring)
+	if err != nil {
+		http.Error(w, "unable to parse out fallback addrs", http.StatusInternalServerError)
+		ctx.Err.Printf("CLN invoice fallback parsing failed", err.Error())
+		return
+	}
+
+	bip21QR := ""
+	addr := ""
+	shortDesc := fmt.Sprintf("1 ticket to %s", conf.Desc)
+	btcAmount := float64(sats) / float64(100000000)
+	if len(onchainAddrs) > 0 {
+		addr = onchainAddrs[0]
+		bip21QR, err = helpers.MakeBIP21QR(btcAmount, shortDesc, addr)
+		if err != nil {
+			http.Error(w, "unable to make bip21", http.StatusInternalServerError)
+			ctx.Err.Printf("bip21 construction failed %s %s", onchainAddrs[0], err.Error())
+			return
+		}
+	}
+
+	invQR, err := helpers.MakeBoltQR(invoice.Invstring)
+	if err != nil {
+		http.Error(w, "unable to make invoice QR", http.StatusInternalServerError)
+		ctx.Err.Printf("invoice QR constructions failed %s %s", invoice.Invstring, err.Error())
+		return
+	}
+
+	/* FIXME: show checkout page! */
+	pageTpl := ctx.TemplateCache["collect-payment.tmpl"]
+	err = pageTpl.Execute(w, &TixPayPage{
+		Conf:      conf,
+		Tix:       tix,
+		Price:     tixPrice,
+		SatsPrice: sats,
+		BtcPrice:  fmt.Sprintf("%.8f", btcAmount),
+		Desc:      shortDesc,
+		BoltQR:    invQR,
+		Invstring: invoice.Invstring,
+		BIP21QR:   bip21QR,
+		BtcAddr:   addr,
+	})
+	if err != nil {
+		http.Error(w, "Unable to load page, please try again later", http.StatusInternalServerError)
+		ctx.Err.Printf("/tix/collect-payment templ exec failed %s", err.Error())
+		return
+	}
 }
 
 func StripeInit(w http.ResponseWriter, r *http.Request, ctx *config.AppContext, conf *types.Conf, tix *types.ConfTicket, tixPrice uint) {
