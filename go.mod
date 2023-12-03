@@ -8,11 +8,13 @@ require (
 	github.com/base58btc/mailer v0.0.0-20230403043105-589977adb995
 	github.com/chromedp/cdproto v0.0.0-20230329100754-6125fc8d7142
 	github.com/chromedp/chromedp v0.9.1
+	github.com/google/go-cmp v0.5.9
 	github.com/gorilla/mux v1.8.0
 	github.com/gorilla/schema v1.2.0
 	github.com/skip2/go-qrcode v0.0.0-20200617195104-da1b6568686e
 	github.com/sorcererxw/go-notion v0.2.4
 	github.com/stripe/stripe-go/v76 v76.3.0
+	github.com/yassun/go-bip21 v0.0.0-20190813103626-13a183e13826
 )
 
 require (

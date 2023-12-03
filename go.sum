@@ -248,8 +248,6 @@ github.com/modern-go/reflect2 v1.0.1 h1:9f412s+6RmYXLWZSEzVVgPGK7C2PphHj5RJrvfx9
 github.com/modern-go/reflect2 v1.0.1/go.mod h1:bx2lNnkwVCuqBIxFjflWJWanXIb3RllmbCylyMrvgv0=
 github.com/niftynei/go-notion v0.0.0-20230323155332-a2c93bab119e h1:cvTZYyhLXUI+ye71Y8ujV8sAQf7y3q5IBKtIyD8M9Pg=
 github.com/niftynei/go-notion v0.0.0-20230323155332-a2c93bab119e/go.mod h1:rFZ80laUSIb1JNKIi9WvjCCkuLM1/Wajeqq2FvE0EZM=
-github.com/niftynei/lnsocket/go v0.0.0-20231126210829-f7651ea81661 h1:MWke/Aa2B4uOfDbmdIaDGP5gISmjQslB3n1kXHPpAHs=
-github.com/niftynei/lnsocket/go v0.0.0-20231126210829-f7651ea81661/go.mod h1:QWegWHYvitnyy90gfyhLOo4/rDjeX6TXUjus/BGh9jQ=
 github.com/nwaples/rardecode v1.1.2 h1:Cj0yZY6T1Zx1R7AhTbyGSALm44/Mmq+BAPc4B/p/d3M=
 github.com/nwaples/rardecode v1.1.2/go.mod h1:5DzqNKiOdpKKBH87u8VlvAnPZMXcGRhxWkRpHbbfGS0=
 github.com/nxadm/tail v1.4.4/go.mod h1:kenIhsEOeOJmVchQTgglprH7qJGnHDVpk1VPCcaMI8A=
@@ -316,6 +314,8 @@ github.com/xi2/xz v0.0.0-20171230120015-48954b6210f8 h1:nIPpBwaJSVYIxUFsDv3M8ofm
 github.com/xi2/xz v0.0.0-20171230120015-48954b6210f8/go.mod h1:HUYIGzjTL3rfEspMxjDjgmT5uz5wzYJKVo23qUhYTos=
 github.com/xiang90/probing v0.0.0-20190116061207-43a291ad63a2 h1:eY9dn8+vbi4tKz5Qo6v2eYzo7kUS51QINcR5jNpbZS8=
 github.com/xiang90/probing v0.0.0-20190116061207-43a291ad63a2/go.mod h1:UETIi67q53MR2AWcXfiuqkDkRtnGDLqkBTpCHuJHxtU=
+github.com/yassun/go-bip21 v0.0.0-20190813103626-13a183e13826 h1:m47jaPX377o/YFPts+wHRB67TjFzO6wbxaD21ZiL/h8=
+github.com/yassun/go-bip21 v0.0.0-20190813103626-13a183e13826/go.mod h1:Zzelag4iuslA4JnqrHVkAVb9HCGJrFm41W+/Kt1PgE8=
 github.com/yuin/goldmark v1.3.6/go.mod h1:mwnBkeHKe2W/ZEtQ+71ViKU8L12m81fl3OWwC1Zlc8k=
 go.etcd.io/bbolt v1.3.5-0.20200615073812-232d8fc87f50/go.mod h1:G5EMThwa9y8QZGBClrRx5EY+Yw9kAhnjy3bSjsnlVTQ=
 go.etcd.io/bbolt v1.3.6 h1:/ecaJf0sk1l4l6V4awd65v2C3ILy7MSj+s/x1ADCIMU=
