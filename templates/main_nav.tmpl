@@ -278,7 +278,19 @@
             </div>
             <div class="group relative rounded-lg p-6 text-sm leading-6 hover:bg-orange-50" style="direction: ltr">
               <div class="flex h-11 w-11 items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
-                <img src="/static/img/ninja.svg" class="h-6 w-6 text-gray-600 group-hover:text-bitcoin" />
+                <svg id="ninja-emoji" class="h-6 w-6 text-gray-600 group-hover:text-bitcoin" viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg">
+		<g fill="currentColor">
+		<path d="M316.618,333.836c1.882-14.32,59.388-41.114,59.388-105.066c0-38.835,0-91.372,0-132.486
+			c0-59.388,35.41-100.501-130.192-95.937c-61.65,1.7-130.2,36.55-130.2,95.937c0,41.114,0,93.651,0,132.486
+			c0,63.952,57.506,90.746,59.388,105.066c5.712,43.4-138.19,34.263-143.902,178.164h214.714H460.52
+			C454.817,368.098,310.906,377.236,316.618,333.836z M245.815,203.644c0,0-52.537,18.274-68.525,11.415
+			c-15.988-6.851-29.699-45.686-13.71-86.792c0,0,34.262,6.852,82.236,6.852c47.964,0,82.227-6.852,82.227-6.852
+			c15.988,41.106,2.287,79.941-13.701,86.792C298.344,221.919,245.815,203.644,245.815,203.644z"/>
+		<path d="M467.965,260.383c-11.234-8.411-24.482-9.509-29.69-2.559l-72.454,96.886
+			c13.066,6.538,28.741,14.486,44.126,25.448l68.847-92.05c1.42-1.873,2.104-4.201,2.104-6.718
+			C480.899,274.679,476.103,266.458,467.965,260.383z"/>
+		</g>
+		</svg>
               </div>
               <a href="/conf/berlin24" class="mt-6 block font-semibold text-gray-900">
                 Berlin | Oct 2024
@@ -304,8 +316,44 @@
                 Austin | April 2025
                 <span class="absolute inset-0"></span>
               </a> 
-              <p class="mt-1 text-gray-600">Mempools</p>
+              <p class="mt-1 text-gray-600">pools (mempools+mining)</p>
             </div>
+	    <!-- istanbul
+            <div class="group relative rounded-lg p-6 text-sm leading-6 hover:bg-orange-50" style="direction: ltr">
+              <div class="flex h-11 w-11 items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                <img src="/static/img/pool.svg" class="h-6 w-6 text-gray-600 group-hover:text-bitcoin" />
+              </div>
+              <a href="/conf/atx25" class="mt-6 block font-semibold text-gray-900">
+                Istanbul | Sept 2025
+                <span class="absolute inset-0"></span>
+              </a> 
+              <p class="mt-1 text-gray-600">Scaling</p>
+            </div>
+	    -->
+	    <!-- berlin/lightning++
+            <div class="group relative rounded-lg p-6 text-sm leading-6 hover:bg-orange-50" style="direction: ltr">
+              <div class="flex h-11 w-11 items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                <img src="/static/img/pool.svg" class="h-6 w-6 text-gray-600 group-hover:text-bitcoin" />
+              </div>
+              <a href="/conf/atx25" class="mt-6 block font-semibold text-gray-900">
+                Berlin | Oct/Nov 2025
+                <span class="absolute inset-0"></span>
+              </a> 
+              <p class="mt-1 text-gray-600">Lightning++</p>
+            </div>
+	    -->
+	    <!-- taipei 
+            <div class="group relative rounded-lg p-6 text-sm leading-6 hover:bg-orange-50" style="direction: ltr">
+              <div class="flex h-11 w-11 items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                <img src="/static/img/pool.svg" class="h-6 w-6 text-gray-600 group-hover:text-bitcoin" />
+              </div>
+              <a href="/conf/atx25" class="mt-6 block font-semibold text-gray-900">
+                Taipei | Dec 2025
+                <span class="absolute inset-0"></span>
+              </a> 
+              <p class="mt-1 text-gray-600">Sovereignty</p>
+            </div>
+	    -->
           </div>
           <!-- cool https://tailwindui.com/components/marketing/elements/headers#component-9b3074c76a13e5151c82c2be12e52a6c -->
           <!-- 
@@ -355,22 +403,35 @@
         <div class="-my-6 divide-y divide-gray-500/10">
           <div class="space-y-2 py-6">
             <div class="">
-              <button type="button" onclick="toggleMobileFlyout(this)" class="flex w-full items-center justify-between rounded-lg py-2 pl-3 pr-3.5 text-base leading-7 text-gray-900 hover:bg-gray-50" aria-controls="disclosure-1" aria-expanded="false">
-                Events
+              <button type="button" onclick="toggleMobileFlyout(this, 'current')" class="flex w-full items-center justify-between rounded-lg py-2 pl-3 pr-3.5 text-base leading-7 text-gray-900 hover:bg-gray-50" aria-controls="disclosure-1" aria-expanded="false">
+                Upcoming Events
                 <!--
                   Expand/collapse icon, toggle classes based on menu open state.
 
                   Open: "rotate-180", Closed: ""
                 -->
-                <svg class="h-5 w-5 flex-none rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" role="nav-caret">
+                <svg class="h-5 w-5 flex-none rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" role="nav-caret-current">
                   <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
                 </svg>
               </button>
               <!-- 'Product' sub-menu, show/hide based on menu state. -->
-              <div class="mt-2 space-y-2" role="mobile-flyout">
+              <div class="mt-2 space-y-2" role="mobile-flyout-current">
                 <a onclick="toggleMenu(this)" href="/conf/atx25" class="block rounded-lg py-2 pl-6 pr-3 text-sm font-semibold leading-7 text-sky-500 hover:bg-gray-50">Austin | April 2025</a>
                 <a onclick="toggleMenu(this)" href="/conf/floripa" class="block rounded-lg py-2 pl-6 pr-3 text-sm font-semibold leading-7 text-teal-400 hover:bg-gray-50">Floripa, Brasil | Jan 2025</a>
-                <a onclick="toggleMenu(this)" href="/conf/berlin24" class="block rounded-lg py-2 pl-6 pr-3 text-sm font-semibold leading-7 text-rose-600 hover:bg-gray-50">Berlin | Oct 2024</a>
+	      </div>
+              <button type="button" onclick="toggleMobileFlyout(this, 'past')" class="flex w-full items-center justify-between rounded-lg py-2 pl-3 pr-3.5 text-base leading-7 text-gray-900 hover:bg-gray-50" aria-controls="disclosure-1" aria-expanded="false">
+                Past Events
+                <!--
+                  Expand/collapse icon, toggle classes based on menu open state.
+
+                  Open: "rotate-180", Closed: ""
+                -->
+                <svg class="h-5 w-5 flex-none rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" role="nav-caret-past">
+                  <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+                </svg>
+              </button>
+              <div class="mt-2 space-y-2" role="mobile-flyout-past">
+                <a onclick="toggleMenu(this)" href="/conf/berlin24" class="block rounded-lg py-2 pl-6 pr-3 text-sm font-semibold leading-7 text-neutral-600 hover:bg-gray-50">Berlin | Oct 2024</a>
                 <a onclick="toggleMenu(this)" href="/conf/atx24" class="block rounded-lg py-2 pl-6 pr-3 text-sm font-semibold leading-7 text-neutral-600 hover:bg-gray-50">Austin | May 2024</a>
                 <a onclick="toggleMenu(this)" href="/conf/ba24" class="block rounded-lg py-2 pl-6 pr-3 text-sm font-semibold leading-7 text-neutral-600 hover:bg-gray-50">Buenos Aires | Feb 2024</a>
                 <a onclick="toggleMenu(this)" href="/conf/berlin23" class="block rounded-lg py-2 pl-6 pr-3 text-sm font-semibold leading-7 text-neutral-600 hover:bg-gray-50">Berlin | Oct 2023</a>

@@ -16,15 +16,15 @@ function toggleMenu(el) {
 	return true;
 }
 
-function toggleMobileFlyout(el) {
-	document.querySelectorAll('[role="mobile-flyout"]').forEach(function (el){
+function toggleMobileFlyout(el, select) {
+	document.querySelectorAll('[role="mobile-flyout-' + select + '"]').forEach(function (el){
 		if (el.classList.contains("hidden")) {
 			el.classList.remove("hidden");
 		} else {
 			el.classList.add("hidden");
 		}
 	});
-	document.querySelectorAll('[role="nav-caret"]').forEach(function (el){
+	document.querySelectorAll('[role="nav-caret-' + select + '"]').forEach(function (el){
 		if (el.classList.contains("rotate-180")) {
 			el.classList.remove("rotate-180");
 		} else {
