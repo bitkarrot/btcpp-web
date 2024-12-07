@@ -1135,9 +1135,6 @@ func OpenNodeCallback(w http.ResponseWriter, r *http.Request, ctx *config.AppCon
 }
 
 func HandleTixCheckStatus(w http.ResponseWriter, r *http.Request, ctx *config.AppContext) {
-	/* FIXME: make this an envar? */
-	token := "6qthVaDryzXm-NpJXdJ4mReZ06auzaMWSQ0pY6HnX8Q9MA=="
-
 	params := mux.Vars(r)
 	invLabel := params["label"]
 
@@ -1149,7 +1146,7 @@ func HandleTixCheckStatus(w http.ResponseWriter, r *http.Request, ctx *config.Ap
 	rc := http.NewResponseController(w)
 
 	ctx.Infos.Println("going for the check!")
-	status, err := clnsocket.WaitInvoice(token, invLabel)
+	status, err := clnsocket.WaitInvoice(ctx.Env.CLN.Rune, invLabel)
 	if err != nil {
 		ctx.Err.Printf("error waiting for invoice %s: %s", invLabel, err)
 		w.WriteHeader(http.StatusServiceUnavailable)

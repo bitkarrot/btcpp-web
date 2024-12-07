@@ -256,8 +256,6 @@ github.com/modern-go/reflect2 v1.0.2 h1:xBagoLtFs94CBntxluKeaWgTMpvLxC4ur3nMaC9G
 github.com/modern-go/reflect2 v1.0.2/go.mod h1:yWuevngMOJpCy52FWWMvUC8ws7m/LJsjYzDa0/r8luk=
 github.com/niftynei/go-notion v0.0.0-20230323155332-a2c93bab119e h1:cvTZYyhLXUI+ye71Y8ujV8sAQf7y3q5IBKtIyD8M9Pg=
 github.com/niftynei/go-notion v0.0.0-20230323155332-a2c93bab119e/go.mod h1:rFZ80laUSIb1JNKIi9WvjCCkuLM1/Wajeqq2FvE0EZM=
-github.com/niftynei/lnsocket/go v0.0.0-20231126210829-f7651ea81661 h1:MWke/Aa2B4uOfDbmdIaDGP5gISmjQslB3n1kXHPpAHs=
-github.com/niftynei/lnsocket/go v0.0.0-20231126210829-f7651ea81661/go.mod h1:QWegWHYvitnyy90gfyhLOo4/rDjeX6TXUjus/BGh9jQ=
 github.com/nwaples/rardecode v1.1.2 h1:Cj0yZY6T1Zx1R7AhTbyGSALm44/Mmq+BAPc4B/p/d3M=
 github.com/nwaples/rardecode v1.1.2/go.mod h1:5DzqNKiOdpKKBH87u8VlvAnPZMXcGRhxWkRpHbbfGS0=
 github.com/nxadm/tail v1.4.4/go.mod h1:kenIhsEOeOJmVchQTgglprH7qJGnHDVpk1VPCcaMI8A=

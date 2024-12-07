@@ -80,6 +80,7 @@ func loadConfig() *types.EnvConfig {
 			Expiry:   expirySec,
 			Hostname: os.Getenv("CLN_HOSTNAME"),
 			Pubkey:   os.Getenv("CLN_NODE_PUBKEY"),
+			Rune:     os.Getenv("CLN_RUNE"),
 		}
 	}
 
@@ -145,7 +146,7 @@ func main() {
 
 func setupCLNCheckout(app *config.AppContext) error {
 	label := "btcpp"
-	err := checkout.Init(app.Env.CLN.Hostname, app.Env.CLN.Pubkey, label)
+	err := checkout.Init(app.Env.CLN.Hostname, app.Env.CLN.Pubkey, app.Env.CLN.Rune, label)
 	if err != nil {
 		return err
 	}

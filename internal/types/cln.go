@@ -5,5 +5,6 @@ type (
 		Expiry   uint64
 		Hostname string
 		Pubkey   string
+		Rune     string
 	}
 )

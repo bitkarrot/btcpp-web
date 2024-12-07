@@ -84,4 +84,6 @@ replace github.com/base58btc/cln-checkout v0.0.0-00010101000000-000000000000 => 
 
 replace github.com/base58btc/clnsocket v0.0.0-00010101000000-000000000000 => ../cln-checkout/cln
 
+replace github.com/niftynei/lnsocket/go v0.0.0-20231126210829-f7651ea81661 => ../lnsocket/go
+
 replace github.com/sorcererxw/go-notion v0.2.4 => github.com/niftynei/go-notion v0.0.0-20230323155332-a2c93bab119e

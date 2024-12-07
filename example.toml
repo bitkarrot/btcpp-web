@@ -12,6 +12,7 @@ hmacsecret = "gremlins-used-peanut-popcorn"
 
 [cln]
 expiry = 30
+rune = "xxxx"
 # localhost
 pubkey = "032c14e1170737f3b1659c371f3e9f830bc308e1cc92b8a7cdd97918038dd45601"
 hostname = "localhost:7171"
