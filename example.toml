@@ -1,0 +1,45 @@
+port = "8888"
+host = "localhost"
+localexternal = "https://9fbd-2800-40-1b-bc6-81be-8ef5-ea52-b0bc.ngrok-free.app"
+mailOff = true
+registryPin = "2939"
+mailerSecret = "XXXX"
+mailerJob = 20
+stripeKey = "XXXX"
+stripeEndpointSec = "XXX"
+useCLN = true
+hmacsecret = "gremlins-used-peanut-popcorn"
+
+[cln]
+expiry = 30
+# localhost
+pubkey = "032c14e1170737f3b1659c371f3e9f830bc308e1cc92b8a7cdd97918038dd45601"
+hostname = "localhost:7171"
+# prod
+#pubkey = "xxxxx"
+#hostname = "xxx.xxx.xxx.xxx:xxxx"
+
+
+[notion]
+token = "secret_XXXX"
+talksdb = "xxxxx"
+speakersdb = "xxxxx"
+purchasesdb = "xxxxx"
+emaildb = "xxxx"
+confsdb = "xxxx"
+confstixdb = "xxxxxx"
+discountsdb = "xxxxx"
+
+[opennode]
+# dev key
+#key = "xxxxx"
+#endpoint = "https://dev-api.opennode.com/v1"
+# for prod!
+key = "xxxxxx"
+endpoint = "https://api.opennode.com/v1"
+
+[sendgrid]
+key = "SG.xxxxx"
+
+[google]
+key = "xxxxxx"
