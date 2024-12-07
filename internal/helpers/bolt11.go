@@ -61,7 +61,7 @@ func GetFallbackAddrs(invstring string) ([]string, error) {
 				if typeData[0] == 0 {
 					version = BECH32
 				}
-				addr, err := Encode(version, "bc", typeData)
+				addr, err := Encode(version, "bcrt", typeData)
 				if err != nil {
 					return nil, err
 				}
