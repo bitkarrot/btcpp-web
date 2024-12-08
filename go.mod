@@ -1,18 +1,18 @@
 module github.com/base58btc/btcpp-web
 
-go 1.21.4
+go 1.21.6
 
 require (
 	github.com/BurntSushi/toml v1.3.2
 	github.com/alexedwards/scs/v2 v2.7.0
-	github.com/base58btc/cln-checkout v0.0.0-00010101000000-000000000000
-	github.com/base58btc/clnsocket v0.0.0-00010101000000-000000000000
 	github.com/base58btc/mailer v0.0.0-20230510213939-04e8f45514b5
 	github.com/chromedp/cdproto v0.0.0-20231126232103-8e31ff06e23b
 	github.com/chromedp/chromedp v0.9.3
 	github.com/google/go-cmp v0.5.9
 	github.com/gorilla/mux v1.8.1
 	github.com/gorilla/schema v1.2.1
+	github.com/niftynei/cln-checkout/checkout v0.0.0-20241208001254-e8a6d6de2227
+	github.com/niftynei/cln-checkout/cln v0.0.0-20241208001254-e8a6d6de2227
 	github.com/skip2/go-qrcode v0.0.0-20200617195104-da1b6568686e
 	github.com/sorcererxw/go-notion v0.2.4
 	github.com/stripe/stripe-go/v76 v76.7.0
@@ -64,11 +64,11 @@ require (
 	github.com/miekg/dns v1.1.57 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
-	github.com/niftynei/lnsocket/go v0.0.0-20231126210829-f7651ea81661 // indirect
+	github.com/niftynei/lnsocket/go v0.0.0-20241207233646-c414c20c1862 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/sendgrid/rest v2.6.9+incompatible // indirect
 	github.com/sendgrid/sendgrid-go v3.14.0+incompatible // indirect
-	github.com/tidwall/gjson v1.17.0 // indirect
+	github.com/tidwall/gjson v1.18.0 // indirect
 	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.1 // indirect
 	golang.org/x/crypto v0.16.0 // indirect
@@ -79,11 +79,5 @@ require (
 	golang.org/x/term v0.15.0 // indirect
 	golang.org/x/tools v0.16.0 // indirect
 )
-
-replace github.com/base58btc/cln-checkout v0.0.0-00010101000000-000000000000 => ../cln-checkout/checkout
-
-replace github.com/base58btc/clnsocket v0.0.0-00010101000000-000000000000 => ../cln-checkout/cln
-
-replace github.com/niftynei/lnsocket/go v0.0.0-20231126210829-f7651ea81661 => ../lnsocket/go
 
 replace github.com/sorcererxw/go-notion v0.2.4 => github.com/niftynei/go-notion v0.0.0-20230323155332-a2c93bab119e

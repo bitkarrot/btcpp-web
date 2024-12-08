@@ -7,7 +7,7 @@ import (
 
 	"github.com/base58btc/btcpp-web/internal/config"
 	"github.com/base58btc/btcpp-web/internal/types"
-	checkout "github.com/base58btc/cln-checkout"
+	"github.com/niftynei/cln-checkout/checkout"
 )
 
 type InvoiceDesc struct {

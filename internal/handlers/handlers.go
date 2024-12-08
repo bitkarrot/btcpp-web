@@ -29,8 +29,8 @@ import (
 	"github.com/stripe/stripe-go/v76/checkout/session"
 	"github.com/stripe/stripe-go/v76/webhook"
 
-	checkout "github.com/base58btc/cln-checkout"
-	"github.com/base58btc/clnsocket"
+	"github.com/niftynei/cln-checkout/checkout"
+	"github.com/niftynei/cln-checkout/cln"
 )
 
 func MiniCss() string {
