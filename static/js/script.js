@@ -52,3 +52,17 @@ function toggleNavFlyout(el) {
 
 	return true;
 }
+
+function togglePayment(type) {
+  // Update toggle buttons
+  document.querySelectorAll('.toggle-btn').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  event.target.classList.add('active');
+
+  // Show/hide payment options
+  document.querySelectorAll('.payment-option').forEach(option => {
+    option.classList.remove('active');
+  });
+  document.getElementById(type + '-option').classList.add('active');
+}
