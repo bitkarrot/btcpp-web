@@ -1,23 +1,50 @@
 .payment-toggle {
   display: flex;
-  justify-content: left;
-  gap: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  /*rgba(255, 255, 255, 0.1);*/
+  padding: 4px;
+  border-radius: 30px;
+  width: fit-content;
+  position: relative;
   margin-bottom: 20px;
 }
 
 .toggle-btn {
-  padding: 10px 20px;
-  border: 2px solid #ffffff;
+  padding: 8px 20px;
+  border: none;
   background: transparent;
-  color: #ffffff;
-  border-radius: 25px;
+  color: #FFF;
   cursor: pointer;
-  transition: all 0.3s ease;
+  /*  transition: all 0.2s ease;*/
+  position: relative;
+  z-index: 1;
+  font-size: 14px;
+  min-width: 100px;
+  text-align: center;
 }
 
 .toggle-btn.active {
-  background: #ffffff;
   color: #1a1a1a;
+  background: #fff;
+  border-radius: 30px;
+
+}
+
+.payment-toggle::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  height: calc(100% - 8px);
+  width: calc(50% - 4px);
+  background: transparent;
+  color: #fff;
+  border-radius: 25px;
+  transition: transform 0.3s ease;
+}
+
+.toggle-btn:last-child.active ~ .payment-toggle::before {
+  transform: translateX(100%);
 }
 
 .payment-option {
