@@ -83,12 +83,14 @@ func HandleCLNInvoiceEvent(ctx *config.AppContext, invoice *checkout.InvoiceEven
 		},
 	}
 
-	err = AddTickets(ctx.Notion, &entry, "CLN")
+	added, err := AddTickets(ctx, ctx.Notion, &entry, "CLN")
 	if err != nil {
-		ctx.Err.Printf("!!! Unable to add ticket %s: %v", err, entry)
+		ctx.Err.Printf("!!! Unable to add tickets %s: %v", err, entry)
 		return false
 	}
 
-	ctx.Infos.Println("Added ticket!", entry.ID)
+	if added > 0 {
+		ctx.Infos.Printf("Added %d tickets! (%s)", added, entry.ID)
+	}
 	return true
 }

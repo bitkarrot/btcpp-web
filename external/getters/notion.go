@@ -6,7 +6,6 @@ import (
 	"encoding/binary"
 	"encoding/hex"
 	"fmt"
-	"log"
 	"strings"
 	"time"
 
@@ -547,8 +546,9 @@ func UniqueID(email string, ref string, counter int32) string {
 	return hex.EncodeToString(h.Sum(nil))
 }
 
-func AddTickets(n *types.Notion, entry *types.Entry, src string) error {
+func AddTickets(ctx *config.AppContext, n *types.Notion, entry *types.Entry, src string) (uint, error) {
 	parent := notion.NewDatabaseParent(n.Config.PurchasesDb)
+	added := uint(0)
 
 	for i, item := range entry.Items {
 		uniqID := UniqueID(entry.Email, entry.ID, int32(i))
@@ -564,12 +564,12 @@ func AddTickets(n *types.Notion, entry *types.Entry, src string) error {
 				},
 			})
 		if err != nil {
-			return fmt.Errorf("failed to check for existing entry: %v", err)
+			return added, fmt.Errorf("failed to check for existing entry: %v", err)
 		}
 
 		// Skip if entry already exists
 		if len(existingPages) > 0 {
-			log.Printf("Skip adding duplicate entry for ID: %s (email: %s, payment: %s)", uniqID, entry.Email, entry.ID)
+			ctx.Infos.Printf("Skip adding duplicate entry for ID: %s (email: %s, payment: %s)", uniqID, entry.Email, entry.ID)
 			continue
 		}
 
@@ -632,9 +632,11 @@ func AddTickets(n *types.Notion, entry *types.Entry, src string) error {
 		}
 		_, err = n.Client.CreatePage(context.Background(), parent, vals)
 		if err != nil {
-			return err
+			return added, err
 		}
+
+		added++
 	}
 
-	return nil
+	return added, nil
 }

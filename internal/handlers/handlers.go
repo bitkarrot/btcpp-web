@@ -1123,14 +1123,14 @@ func OpenNodeCallback(w http.ResponseWriter, r *http.Request, ctx *config.AppCon
 		return
 	}
 
-	err = getters.AddTickets(ctx.Notion, &entry, "opennode")
+	added, err := getters.AddTickets(ctx, ctx.Notion, &entry, "opennode")
 
 	if err != nil {
 		ctx.Err.Printf("!!! Unable to add ticket %s: %v", err, entry)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	ctx.Infos.Println("Added ticket!", entry.ID)
+	ctx.Infos.Printf("Added %d tickets! %s", added, entry.ID)
 	w.WriteHeader(http.StatusOK)
 }
 
@@ -1570,14 +1570,14 @@ func StripeCallback(w http.ResponseWriter, r *http.Request, ctx *config.AppConte
 			return
 		}
 
-		err = getters.AddTickets(ctx.Notion, &entry, "stripe")
+		added, err := getters.AddTickets(ctx, ctx.Notion, &entry, "stripe")
 
 		if err != nil {
-			ctx.Err.Printf("!!! Unable to add ticket %s: %v", err)
+			ctx.Err.Printf("!!! Unable to add ticket #%d: %s", added, err)
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
-		ctx.Infos.Printf("Added %d tickets!!", len(entry.Items))
+		ctx.Infos.Printf("Added %d tickets!!", added)
 	default:
 		ctx.Infos.Printf("Unhandled event type: %s", event.Type)
 	}
