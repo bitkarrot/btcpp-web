@@ -6,11 +6,12 @@ import (
 	"encoding/binary"
 	"encoding/hex"
 	"fmt"
+	"strings"
+	"time"
+
 	"github.com/base58btc/btcpp-web/internal/config"
 	"github.com/base58btc/btcpp-web/internal/types"
 	"github.com/sorcererxw/go-notion"
-	"strings"
-	"time"
 )
 
 func parseRichText(key string, props map[string]notion.PropertyValue) string {
@@ -550,6 +551,26 @@ func AddTickets(n *types.Notion, entry *types.Entry, src string) error {
 
 	for i, item := range entry.Items {
 		uniqID := UniqueID(entry.Email, entry.ID, int32(i))
+
+		// Check if entry already exists
+		existingPages, _, _, err := n.Client.QueryDatabase(context.Background(), n.Config.PurchasesDb,
+			notion.QueryDatabaseParam{
+				Filter: &notion.Filter{
+					Property: "RefID",
+					Text: &notion.TextFilterCondition{
+						Equals: uniqID,
+					},
+				},
+			})
+		if err != nil {
+			return fmt.Errorf("failed to check for existing entry: %v", err)
+		}
+
+		// Skip if entry already exists
+		if len(existingPages) > 0 {
+			continue
+		}
+
 		vals := map[string]*notion.PropertyValue{
 			"RefID": notion.NewTitlePropertyValue(
 				[]*notion.RichText{
@@ -607,7 +628,7 @@ func AddTickets(n *types.Notion, entry *types.Entry, src string) error {
 				[]*notion.ObjectReference{{ID: entry.DiscountRef}}...,
 			)
 		}
-		_, err := n.Client.CreatePage(context.Background(), parent, vals)
+		_, err = n.Client.CreatePage(context.Background(), parent, vals)
 		if err != nil {
 			return err
 		}
