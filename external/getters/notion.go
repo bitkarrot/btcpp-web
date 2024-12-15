@@ -6,6 +6,7 @@ import (
 	"encoding/binary"
 	"encoding/hex"
 	"fmt"
+	"log"
 	"strings"
 	"time"
 
@@ -568,6 +569,7 @@ func AddTickets(n *types.Notion, entry *types.Entry, src string) error {
 
 		// Skip if entry already exists
 		if len(existingPages) > 0 {
+			log.Printf("Skip adding duplicate entry for ID: %s (email: %s, payment: %s)", uniqID, entry.Email, entry.ID)
 			continue
 		}
 
