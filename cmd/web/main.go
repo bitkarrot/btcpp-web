@@ -124,6 +124,8 @@ func main() {
 		err = setupCLNCheckout(&app)
 		if err != nil {
 			app.Err.Printf("Warning: CLN checkout setup failed: %v", err)
+			app.Env.UseCLN = false
+			app.Err.Printf("CLN checkout disabled, Falling back to OpenNode")
 		}
 	}
 
