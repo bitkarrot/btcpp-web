@@ -120,9 +120,11 @@ func main() {
 
 	/* If we're using the CLN backend, init
 	 * the checkout runner */
-	err = setupCLNCheckout(&app)
-	if err != nil {
-		app.Err.Fatal(err)
+	if app.Env.UseCLN {
+		err = setupCLNCheckout(&app)
+		if err != nil {
+			app.Err.Printf("Warning: CLN checkout setup failed: %v", err)
+		}
 	}
 
 	srv := &http.Server{
